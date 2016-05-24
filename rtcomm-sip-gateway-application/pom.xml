@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>net.wasdev.wlp.sample</groupId>
+		<artifactId>sample.rtcomm.sip.gateway</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>rtcomm-sip-gateway-application</artifactId>
+	<packaging>war</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>Rtcomm SIP Gateway Application</name>
+	<url>https://wasdev.github.io</url>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>https://raw.github.com/WASdev/sample.rtcommm.sip.gateway/master/LICENSE</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git@github.com:WASdev/sample.rtcomm.sip.gateway.git</connection>
+		<developerConnection>scm:git@github.com:WASdev/sample.rtcomm.sip.gateway.git</developerConnection>
+		<url>git@github.com:WASdev/sample.rtcomm.sip.gateway.git</url>
+	</scm>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.ibm.tools.target</groupId>
+			<artifactId>was-liberty</artifactId>
+			<version>LATEST</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<stripVersion>true</stripVersion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>

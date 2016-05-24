@@ -1,0 +1,39 @@
+<server description="Liberty Profile for the Rtcomm SIP Gateway">
+
+  <!-- Enable features -->
+  <featureManager>
+
+    <feature>rtcomm-1.0</feature>
+    <feature>rtcommGateway-1.0</feature>
+    <feature>sipServlet-1.1</feature>
+    <feature>localConnector-1.0</feature>
+    <feature>mediaServerControl-1.0</feature>
+    <!-- JSR309 Connector Feature -->
+    <feature>usr:com.vendor.dialogic.javax.media.mscontrol.LIBERTY.snapshot</feature>
+    </featureManager>
+
+  <!-- Rtcomm Configuration Details  -->
+  <!-- Should configure to point to an available MQTT Broker -->
+  <rtcomm messageServerHost="localhost" messageServerPort="1883" rtcommTopicPath="/rtcomm/">
+    <gateway allowFromSipEndpointRef="aa"/>
+    <iceServerURL>stun:stun.l.google.com:19302</iceServerURL>
+    <iceServerURL>stun:stun1.l.google.com:19302</iceServerURL>
+    <iceServerURL>stun:stun2.l.google.com:19302</iceServerURL>
+  </rtcomm>
+
+  <!-- SIP Configuration -->
+  <!-- sentByHost needs to be set to the public address of the machine-->
+  <sipStack sentByHost="x.x.x.x"/>
+
+  <sipEndpoint host="*" id="aa" sipTCPPort="5068"/>
+  <sipEndpoint host="*" id="bb" sipTCPPort="5060"/>
+
+  <!-- Enable Logging -->
+  <logging traceSpecification="*=info:com.ibm.ws.rtcomm.*=all:com.ibm.ws.webrtcgateway.*=all:com.ibm.ws.sip.ua.*=all"/>
+
+  <applicationMonitor updateTrigger="mbean"/>
+
+  <!-- Web Application Name -->
+
+    <webApplication id="rtcomm-sip-gateway-application" location="rtcomm-sip-gateway-application.war" name="rtcomm-sip-gateway-application"/>
+</server>

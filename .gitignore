@@ -1,0 +1,20 @@
+
+# OSX
+.DS_Store
+
+**/logs/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+.settings/
+.loadpath
+.project
+.classpath
+/target
+.factorypath
+.apt_generated

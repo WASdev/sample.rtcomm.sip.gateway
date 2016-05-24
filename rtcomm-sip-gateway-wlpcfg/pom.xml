@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>net.wasdev.wlp.sample</groupId>
+		<artifactId>sample.rtcomm.sip.gateway</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>rtcomm-sip-gateway-wlpcfg</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>liberty-assembly</packaging>
+	<name>Rtcomm SIP Gateway Server Configuration</name>
+
+	<!-- Wlpcfg - Liberty Properties -->
+	<properties>
+		<wlpUserDir>${basedir}</wlpUserDir>
+		<wlpServerName>rtcommSipGatewayServer</wlpServerName>
+		<JSR309LibertyFeatureURL>https://www.dialogic.com/files/jsr-309/5.2GA/com.vendor.dialogic.javax.media.mscontrol.LIBERTY.snapshot_5.0.1.esa</JSR309LibertyFeatureURL>
+	</properties>
+
+	<!-- Dependency on the rtcomm-sip-gateway-application -->
+	<dependencies>
+		<dependency>
+			<groupId>net.wasdev.wlp.sample</groupId>
+			<artifactId>rtcomm-sip-gateway-application</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>net.wasdev.wlp.maven.plugins</groupId>
+				<artifactId>liberty-maven-plugin</artifactId>
+				<extensions>true</extensions>
+
+				<executions>
+
+					<!-- Install the rtcomm-1.0, rtcommGateway-1.0 and mediaServerControl-1.0 
+						features -->
+					<execution>
+						<id>install features from Liberty Repository</id>
+						<phase>process-resources</phase>
+
+						<goals>
+							<goal>install-feature</goal>
+						</goals>
+
+						<configuration>
+							<features>
+								<acceptLicense>true</acceptLicense>
+								<feature>rtcomm-1.0</feature>
+								<feature>rtcommGateway-1.0</feature>
+								<feature>mediaServerControl-1.0</feature>
+								<feature>wab-1.0</feature>
+							</features>
+						</configuration>
+					</execution>
+
+					<!-- Install the Dialogic JSR309 Feature for Liberty -->
+					<execution>
+						<id>install-dialogic-feature</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>install-feature</goal>
+						</goals>
+
+						<configuration>
+							<features>
+								<acceptLicense>true</acceptLicense>
+
+								<feature>${JSR309LibertyFeatureURL}</feature>
+							</features>
+						</configuration>
+
+					</execution>
+
+				</executions>
+				<configuration>
+
+					<serverName>${wlpServerName}</serverName>
+					<userDirectory>${wlpUserDir}</userDirectory>
+
+					<assemblyInstallDirectory>${project.build.directory}</assemblyInstallDirectory>
+					<configFile>${basedir}/servers/${wlpServerName}/server.xml</configFile>
+					<include>usr</include>
+					<appsDirectory>apps</appsDirectory>
+
+					<stripVersion>true</stripVersion>
+
+				</configuration>
+			</plugin>
+
+			<!-- Clean Additional Liberty files -->
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.6.1</version>
+				<configuration>
+					<excludeDefaultDirectories>true</excludeDefaultDirectories>
+					<filesets>
+						<fileset>
+							<directory>target</directory>
+						</fileset>
+						<fileset>
+							<directory>extension</directory>
+						</fileset>
+						<fileset>
+							<directory>servers</directory>
+							<followSymlinks>false</followSymlinks>
+							<includes>
+								<include>**/logs/**</include>
+								<include>**/apps/*</include>
+								<include>**/dropins/*</include>
+								<include>**/*.zip</include>
+								<include>**/workarea/**</include>
+								<include>**/extension/**</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+	<!-- Run the Build on an Existing Liberty Installation -->
+	<profiles>
+		<profile>
+			<id>wlp-setup</id>
+			<activation>
+
+				<property>
+					<name>wlp.install.dir</name>
+				</property>
+
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>net.wasdev.wlp.maven.plugins</groupId>
+						<artifactId>liberty-maven-plugin</artifactId>
+						<configuration>
+							<installDirectory>${wlp.install.dir}</installDirectory>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+	</profiles>
+</project>

@@ -10,6 +10,7 @@
     <feature>mediaServerControl-1.0</feature>
     <!-- JSR309 Connector Feature -->
     <feature>usr:com.vendor.dialogic.javax.media.mscontrol.LIBERTY.snapshot</feature>
+
     </featureManager>
 
   <!-- Rtcomm Configuration Details  -->
@@ -29,11 +30,10 @@
   <sipEndpoint host="*" id="bb" sipTCPPort="5060"/>
 
   <!-- Enable Logging -->
-  <logging traceSpecification="*=info:com.ibm.ws.rtcomm.*=all:com.ibm.ws.webrtcgateway.*=all:com.ibm.ws.sip.ua.*=all"/>
+  <logging traceSpecification="*=info:net.wasdev.webrtcgateway.*=all"/>
 
   <applicationMonitor updateTrigger="mbean"/>
 
-  <!-- Web Application Name -->
 
     <webApplication id="rtcomm-sip-gateway-application" location="rtcomm-sip-gateway-application.war" name="rtcomm-sip-gateway-application"/>
 </server>

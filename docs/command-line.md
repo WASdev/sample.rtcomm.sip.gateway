@@ -28,34 +28,11 @@ webrtc-gateway-wlpcfg
 
 ### Running the application locally
 
-Pre-requisite: [Download WAS Liberty](https://developer.ibm.com/wasdev/getstarted/)
-
-We recommend that you set an environment variable that points to your Liberty installation:
-```bash
-export WLP_DIR=/path/to/wlp/
-```
-
-You will also need to install the Liberty features required:
+You can run the sample by using Maven:
 
 ```bash
-$ $WLP_DIR/bin/installUtility install --acceptLicense rtcomm-1.0 rtcommGateway-1.0 sipServlet-1.1 localConnector-1.0 mediaServerControl-1.0 jndi-1.0
-```
-As well as the temporary dialogic feature for Liberty that's downloaded from this repository, you must also set the Liberty user directory:
-```bash
-$ export WLP_USER_DIR=/path/to/webrtc-gateway/webrtc-gateway-wlpcfg
-$ $WLP_DIR/bin/installUtility install /path/to/webrtc-gateway/com.vendor.dialogic.javax.media.mscontrol.LIBERTY.snapshot_5.0.1.esa
-```
+mvn -f rtcomm-sip-gateway-wlpcfg/pom.xml liberty:run-server
 
-Use the following to start the server and run the application:
+This will run the server. You can check the logs in the directory <code>rtcomm-sip-gateway-wlpcfg/servers/rtcommSipGatewayServer/logs</code>.
 
-```bash
-$ export WLP_USER_DIR=/path/to/webrtc-gateway/webrtc-gateway-wlpcfg
-$ $WLP_DIR/bin/server run webrtcGatewayServer
-```
-
-* `run` runs the server in the foreground.
-* `start` runs the server in the background. Look in the logs directory for console.log to see what's going on, e.g.
-
-```bash
-$ tail -f ${WLP_USER_DIR}/servers/rtcommSipGatewayServer/logs/console.log
-```
+Once the application is configured and running, register on the Rtcomm Client as a user and place a call to them using Linphone.

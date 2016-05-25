@@ -61,7 +61,7 @@ Copy the path to your Runtime Environment for this step.
 1. Right-click on rtcomm-sip-gateway-wlpcfg/pom.xml
 2. Run As -> Maven Build...
 3. In the Goals section enter
-  ```text
+  ```
   install -Dwlp.install.dir=[PATH_TO_RUNTIME_ENVIRONMENT]
   ```
 4. Click 'Run'

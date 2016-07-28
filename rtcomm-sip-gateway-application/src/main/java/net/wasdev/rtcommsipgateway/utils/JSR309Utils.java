@@ -39,6 +39,12 @@ public class JSR309Utils {
 	public static final String SIP_SESSION_ATTRIBUTE = "SIP_SESSION";
 	public static final String NETWORKCONNECTION_PROPERTY_PREFIX = "networkconnection.";
 
+	public static final String MEDIASERVER_PROPERTY_PREFIX = "mediaserver.";
+	public static final String MEDIAROUTEPROFILE_PROPERTY_PREFIX = "mediarouteprofile.";
+	public static final String MEDIAROUTEPROFILE_PROPERTY_NAME = "mediarouteprofile";
+	public static final String MEDIAROUTEPROFILE_PROPERTY_WEBRTC = "webrtc";
+	public static final String MEDIAROUTEPROFILE_PROPERTY_NONWEBRTC = "non-webrtc";
+
 	private static MsControlFactory s_msFactory;
 	private static Properties s_factoryOverrideProperties;
 
@@ -119,6 +125,22 @@ public class JSR309Utils {
 
 					configurationData.put(propertyName, propertyValue);   
 				}
+				//7Jul, 2016 XMS Dual NIC changes - Setting the appropriate Interface for WebRTC
+				else if(ncPropertyStr.startsWith(MEDIASERVER_PROPERTY_PREFIX)){
+					String propertyName = ncPropertyStr.split(MEDIASERVER_PROPERTY_PREFIX)[1];
+					if (propertyName.startsWith(MEDIAROUTEPROFILE_PROPERTY_PREFIX)){
+						String propertyType = propertyName.split(MEDIAROUTEPROFILE_PROPERTY_PREFIX)[1];
+						if (propertyType.equalsIgnoreCase(MEDIAROUTEPROFILE_PROPERTY_WEBRTC)){
+							String propertyValue = (String)s_factoryOverrideProperties.getProperty(ncPropertyStr);
+
+							if (log.isLoggable(Level.FINE)) {
+								log.fine("createCustomNetworkConnection: Setting property: name: " + propertyName + " value:" + propertyValue);
+							}
+
+							configurationData.put(MEDIAROUTEPROFILE_PROPERTY_NAME, propertyValue);
+						}
+					}
+				}
 			}
 
 			sdpConfiguration.put(SdpPortManager.SIP_HEADERS, configurationData);
@@ -128,6 +150,27 @@ public class JSR309Utils {
 			Parameters sdpConfiguration = mediaSession.createParameters();
 			Map<String,String>  configurationData = new HashMap<String,String>();
 			configurationData.put("RTP-SECURITY", "SDES");
+
+			//7Jul, 2016 XMS Dual NIC changes - Setting the appropriate Interface for non-WebRTC
+			for(Object ncProperty : s_factoryOverrideProperties.keySet()){
+				String ncPropertyStr = (String)ncProperty;
+				if(ncPropertyStr.startsWith(MEDIASERVER_PROPERTY_PREFIX)){
+					String propertyName = ncPropertyStr.split(MEDIASERVER_PROPERTY_PREFIX)[1];
+					if (propertyName.startsWith(MEDIAROUTEPROFILE_PROPERTY_PREFIX)){
+						String propertyType = ncPropertyStr.split(MEDIAROUTEPROFILE_PROPERTY_PREFIX)[1];
+						if (propertyType.equalsIgnoreCase(MEDIAROUTEPROFILE_PROPERTY_NONWEBRTC)){
+							String propertyValue = (String)s_factoryOverrideProperties.getProperty(ncPropertyStr);
+
+							if (log.isLoggable(Level.FINE)) {
+								log.fine("createCustomNetworkConnection: Setting property: name: " + propertyName + " value:" + propertyValue);
+							}
+
+							configurationData.put(MEDIAROUTEPROFILE_PROPERTY_NAME, propertyValue);
+						}
+					}
+				}
+			}
+
 			sdpConfiguration.put(SdpPortManager.SIP_HEADERS, configurationData);
 			networkConnection.setParameters(sdpConfiguration);
 			log.fine("Done Setting parameters");

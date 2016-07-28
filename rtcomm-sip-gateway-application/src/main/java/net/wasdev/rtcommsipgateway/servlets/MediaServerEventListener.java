@@ -276,7 +276,7 @@ public class MediaServerEventListener implements MediaEventListener<SdpPortManag
 			///////////////////////
 			String sdpStr = new String(sdp, "UTF-8");
 			sdpStr = sdpStr.replace("h264","H264");
-			sdpStr = sdpStr.replace("SAVP","SAVPF");
+			sdpStr = sdpStr.replace("/\bSAVP\b/","SAVPF");
 
 			sdp = sdpStr.getBytes();
 			///////////////////////

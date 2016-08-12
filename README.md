@@ -27,6 +27,21 @@ Every time you modify the property files you will need to re-deploy the applicat
 
 ## <a name="configuration"></a>Configuration
 
+The basic configuration for the Rtcomm SIP Gateway can be done through the server.xml using Environment Variables, you can edit this file to set the config: <code>rtcomm-sip-gateway-wlpcfg/servers/rtcommSipGatewayServer/server.env
+
+```env
+# Sample Env File
+
+MEDIA_SERVER_SIP_ADDRESS=52.71.28.217
+MEDIA_SERVER_SIP_PORT=5060
+SIP_HOST=107.13.137.161
+MQTT_BROKER_HOST=localhost
+MQTT_BROKER_PORT=1883
+RTCOMM_TOPIC_PATH=rtcomm
+
+
+
+```
 In order for the application to work, you need to setup the  properties for the JSR309 Driver, the rtcomm feature and for the SIP Endpoint. Set the properties by editing the following property files:
 
 ```

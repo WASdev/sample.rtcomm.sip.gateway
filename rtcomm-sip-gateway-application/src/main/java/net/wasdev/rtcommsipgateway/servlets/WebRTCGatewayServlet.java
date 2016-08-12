@@ -44,6 +44,7 @@ import net.wasdev.rtcommsipgateway.callmgr.CallRecord;
 import net.wasdev.rtcommsipgateway.callmgr.CallsManager;
 import net.wasdev.rtcommsipgateway.driver.JSR309Driver;
 import net.wasdev.rtcommsipgateway.driver.MSConnectorFactory;
+import net.wasdev.rtcommsipgateway.utils.JNDIHelper;
 import net.wasdev.rtcommsipgateway.utils.JSR309Utils;
 import net.wasdev.rtcommsipgateway.utils.SipUtils;
 
@@ -204,8 +205,9 @@ public class WebRTCGatewayServlet extends SipServlet{
 
 				//	SIP Trunking supports audio only. This is the code that removes video from the SDP.
 				//	Note that this is critical to get audio to playback in Chrome
-				String[] mediaTypeCaps = new String[1];
+				String[] mediaTypeCaps = new String[2];
 				mediaTypeCaps[0] = "audio";
+				mediaTypeCaps[1] = "video";
 				CodecPolicy codecPolicy = calleeNC.getSdpPortManager().getCodecPolicy();
 				codecPolicy.setMediaTypeCapabilities(mediaTypeCaps);
 				calleeNC.getSdpPortManager().setCodecPolicy(codecPolicy);
@@ -445,6 +447,17 @@ public class WebRTCGatewayServlet extends SipServlet{
 			synchronized (s_lock) {
 				if(s_driverSingleton == null){
 					Properties driverProperties = loadConfigurationProperties(JSR309_DRIVER_PROPERTIES_FILE_PATH);
+					
+					//Map for JNDI Entries to Properties
+					HashMap<String, String> jndiToPropertyKeyMap = new HashMap<String, String>();
+					jndiToPropertyKeyMap.put("mediaServerSipAddress", "mediaserver.sip.ipaddress");
+					jndiToPropertyKeyMap.put("mediaServerSipPort",  "mediaserver.sip.port");
+					
+					//This will load the JNDI Values specified in the HashMap and override the properties file
+	                   JNDIHelper helper = new JNDIHelper();
+
+					helper.overrideProperties(jndiToPropertyKeyMap, driverProperties);
+					
 					s_driverSingleton = loadDriver(driverProperties);
 					s_callsManager = CallsManager.getInstance();
 					JSR309Utils.initMsControlFactory(s_driverSingleton.getMsControlFactory(), driverProperties);

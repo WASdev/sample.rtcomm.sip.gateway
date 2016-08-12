@@ -127,7 +127,7 @@ public class JSR309Utils {
 			log.fine("Not WEBRTC");
 			Parameters sdpConfiguration = mediaSession.createParameters();
 			Map<String,String>  configurationData = new HashMap<String,String>();
-			configurationData.put("RTP-SECURITY", "SDES");
+//			configurationData.put("RTP-SECURITY", "SDES");
 			sdpConfiguration.put(SdpPortManager.SIP_HEADERS, configurationData);
 			networkConnection.setParameters(sdpConfiguration);
 			log.fine("Done Setting parameters");

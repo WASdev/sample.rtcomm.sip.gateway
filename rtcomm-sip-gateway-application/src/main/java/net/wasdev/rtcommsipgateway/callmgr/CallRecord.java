@@ -63,17 +63,17 @@ public class CallRecord {
 		SipURI sipURI = ((SipURI)initialInviteRequest.getTo().getURI());
 		String sipURIString = sipURI.toString();
 
-		if (hostId == null) {
-			// Sametime calls to WebRTC
-			hostId = sipURI.getUser();
-			log.fine(hostId);
-			SipURI newSipURI = (SipURI)sipURI.clone();
-			SipURI registeredURI = CallsManager.getInstance().getURI(hostId);
-			log.fine(registeredURI.toString());
-
-			newSipURI.setHost(registeredURI.getHost());
-			sipURIString = newSipURI.toString().split(";")[0];
-		}
+//		if (hostId == null) {
+//			// Sametime calls to WebRTC
+//			hostId = sipURI.getUser();
+//			log.fine(hostId);
+//			SipURI newSipURI = (SipURI)sipURI.clone();
+//			SipURI registeredURI = CallsManager.getInstance().getURI(hostId);
+//			log.fine(registeredURI.toString());
+//
+//			newSipURI.setHost(registeredURI.getHost());
+//			sipURIString = newSipURI.toString().split(";")[0];
+//		}
 
 		CallParticipant callee = new CallParticipant(hostId, isWebRTC, sipURIString);
 

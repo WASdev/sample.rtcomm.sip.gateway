@@ -29,6 +29,20 @@
 	<pluginRepositories>
 		<!-- Configure Sonatype OSS Maven snapshots repository (newer maven liberty
 			plugin) -->
+
+			 <!-- Configure WASdev repository -->
+			 <pluginRepository>
+					 <id>WASdev</id>
+					 <name>WASdev Repository</name>
+					 <url>http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/maven/repository/</url>
+					 <layout>default</layout>
+					 <snapshots>
+							 <enabled>false</enabled>
+					 </snapshots>
+					 <releases>
+							 <enabled>true</enabled>
+					 </releases>
+			 </pluginRepository>
 		<pluginRepository>
 			<id>sonatype-nexus-snapshots</id>
 			<name>Sonatype Nexus Snapshots</name>
@@ -48,7 +62,7 @@
 				<plugin>
 					<groupId>net.wasdev.wlp.maven.plugins</groupId>
 					<artifactId>liberty-maven-plugin</artifactId>
-					<version>1.1</version>
+					<version>1.2</version>
 				</plugin>
 
 				<plugin>
@@ -65,8 +79,6 @@
 										<versionRange>[1.1,)</versionRange>
 										<goals>
 											<goal>install-feature</goal>
-											<goal>create-server</goal>
-											<goal>install-apps</goal>
 										</goals>
 
 									</pluginExecutionFilter>

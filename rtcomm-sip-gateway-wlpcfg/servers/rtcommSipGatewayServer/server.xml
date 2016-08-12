@@ -1,39 +1,62 @@
-<server description="Liberty Profile for the Rtcomm SIP Gateway">
+<server description="new server">
 
-  <!-- Enable features -->
-  <featureManager>
-
-    <feature>rtcomm-1.0</feature>
-    <feature>rtcommGateway-1.0</feature>
-    <feature>sipServlet-1.1</feature>
-    <feature>localConnector-1.0</feature>
-    <feature>mediaServerControl-1.0</feature>
-    <!-- JSR309 Connector Feature -->
-    <feature>usr:com.vendor.dialogic.javax.media.mscontrol.LIBERTY.snapshot</feature>
-
+	<!-- Enable features -->
+	<featureManager>
+		<!--feature>webProfile-7.0</feature -->
+		<feature>rtcomm-1.0</feature>
+		<feature>localConnector-1.0</feature>
+		<feature>rtcommGateway-1.0</feature>
+		<feature>sipServlet-1.1</feature>
+		<feature>usr:com.vendor.dialogic.javax.media.mscontrol.LIBERTY.snapshot</feature>
+		<feature>mediaServerControl-1.0</feature>
+        <feature>jndi-1.0</feature>
     </featureManager>
 
-  <!-- Rtcomm Configuration Details  -->
-  <!-- Should configure to point to an available MQTT Broker -->
-  <rtcomm messageServerHost="localhost" messageServerPort="1883" rtcommTopicPath="/rtcomm/">
-    <gateway allowFromSipEndpointRef="aa"/>
-    <iceServerURL>stun:stun.l.google.com:19302</iceServerURL>
-    <iceServerURL>stun:stun1.l.google.com:19302</iceServerURL>
-    <iceServerURL>stun:stun2.l.google.com:19302</iceServerURL>
-  </rtcomm>
 
-  <!-- SIP Configuration -->
-  <!-- sentByHost needs to be set to the public address of the machine-->
-  <sipStack sentByHost="x.x.x.x"/>
+	<!-- To access this server from a remote client add a host attribute to
+		the following element, e.g. host="*" -->
+	<httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
+	<!-- httpPort="9080" -->
 
-  <sipEndpoint host="*" id="aa" sipTCPPort="5068"/>
-  <sipEndpoint host="*" id="bb" sipTCPPort="5060"/>
 
-  <!-- Enable Logging -->
-  <logging traceSpecification="*=info:net.wasdev.webrtcgateway.*=all"/>
+	<!-- Setup the rtcomm options with a unique topic path for the Liberty Server
+		profile <rtcomm messageServerHost="stf-mqtt.tcldemo.net" messageServerPort="1883"
+		rtcommTopicPath="/rtcommVideoSample/"> -->
 
-  <applicationMonitor updateTrigger="mbean"/>
+	<rtcomm messageServerHost="${env.MQTT_BROKER_HOST}" messageServerPort="${env.MQTT_BROKER_PORT}" rtcommTopicPath="/${env.RTCOMM_TOPIC_PATH}/">
+		<gateway allowFromSipEndpointRef="aa" sipContainer="true"/>
 
+
+		<iceServerURL>stun:stun.l.google.com:19302</iceServerURL>
+		<iceServerURL>stun:stun1.l.google.com:19302</iceServerURL>
+		<iceServerURL>stun:stun2.l.google.com:19302</iceServerURL>
+
+	</rtcomm>
+
+
+	<sipContainer>
+		<sipTasksDispatcher concurrentContainerTasks="15"/>
+	</sipContainer>
+
+	<!-- SIP Configuration -->
+	<!-- sentByHost needs to be set to the public address of the machine <sipStack
+		sentByHost="100.64.6.43"/> -->
+	<sipStack pathMtu="40000" sentByHost="${env.SIP_HOST}"/>
+
+
+ 	<sipEndpoint host="*" id="aa" sipTCPPort="5068" sipUDPPort="5068"/>
+  <sipEndpoint host="*" id="bb" sipTCPPort="5060" sipUDPPort="5060"/>
+
+	<!-- Setting Application router properties file <sipApplicationRouter sipDarConfiguration="/home/dbiswas/code/wlp/usr/servers/rtcomm_server1/resources/Dialogic/dar.properties"
+		/> -->
+	<!-- Enable Logging <logging traceSpecification="*=info:net.wasdev.webrtcgateway.*=all:com.ibm.ws.rtcomm.*=all"/> -->
+<!--  	<logging 		traceSpecification="*=info:net.wasdev.rtcommsipgateway.*=all:com.ibm.ws.rtcomm.*=all:com.ibm.ws.sip.*=all" />
+ -->
+    	<logging traceSpecification="*=info:net.wasdev.rtcommsipgateway.*=all:com.ibm.ws.rtcomm.*=all"/>
+ 	<applicationMonitor updateTrigger="mbean"/>
 
     <webApplication id="rtcomm-sip-gateway-application" location="rtcomm-sip-gateway-application.war" name="rtcomm-sip-gateway-application"/>
+
+    <jndiEntry jndiName="mediaServerSipAddress" value="${env.MEDIA_SERVER_SIP_ADDRESS}" />
+    <jndiEntry jndiName="mediaServerSipPort" value="${env.MEDIA_SERVER_SIP_PORT}"/>
 </server>
